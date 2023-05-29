@@ -33,7 +33,7 @@ export default function Airplanes() {
         <boxGeometry />
         <meshStandardMaterial color='red' />
 
-        {airplaneData.map((airplane, i) => {
+        {airplaneData.map((airplane) => {
           return <Airplane key={airplane.hex} {...airplane} />;
         })}
       </Instances>
