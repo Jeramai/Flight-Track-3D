@@ -1,6 +1,5 @@
 # Todo:
 
-- Earth object with rotation
 - Change cubes to planes
 - Click on plane
   - Show plane info
