@@ -7,6 +7,7 @@ import { Vector3 } from 'three';
 
 export default function Airplane({ lat, lng, alt, speed, v_speed }) {
   const ref = useRef();
+  const modifier = 100000;
 
   const getNewPosition = useCallback((_lat, _lng, _alt, horizontalSpeed, verticalSpeed) => {
     const newLat = _lat + horizontalSpeed * Math.cos((_alt * Math.PI) / 180) * 0.000001;
@@ -20,10 +21,10 @@ export default function Airplane({ lat, lng, alt, speed, v_speed }) {
     };
   }, []);
   const positionToVector3 = useCallback((_alt, _lat, _lng) => {
-    const alt_in_m = _alt / 1000;
-    const x = Math.cos(_lat) * Math.cos(_lng) * alt_in_m,
-      y = Math.cos(_lat) * Math.sin(_lng) * alt_in_m,
-      z = Math.sin(_lat) * alt_in_m;
+    const alt_in_km = _alt * 1000 + 6378137;
+    const x = Math.cos(_lat) * Math.cos(_lng) * alt_in_km,
+      y = Math.cos(_lat) * Math.sin(_lng) * alt_in_km,
+      z = Math.sin(_lat) * alt_in_km;
 
     return new Vector3(x, y, z);
   }, []);
@@ -51,7 +52,7 @@ export default function Airplane({ lat, lng, alt, speed, v_speed }) {
   return (
     <Instance
       ref={ref}
-      scale={0.05}
+      scale={1 * modifier}
       position={position}
       userDate={{
         lat: lat,
