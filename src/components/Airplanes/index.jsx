@@ -22,8 +22,12 @@ export default function Airplanes() {
         return response.json();
       })
       .then(({ response }) => {
-        setAirplaneData(response);
-        localStorage.setItem('airplaneData', JSON.stringify(response));
+        if (response) {
+          setAirplaneData(response);
+          localStorage.setItem('airplaneData', JSON.stringify(response));
+        } else {
+          console.error('No data found, API key missing?');
+        }
       });
   }, []);
 
