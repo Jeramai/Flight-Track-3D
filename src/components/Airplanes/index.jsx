@@ -21,12 +21,12 @@ export default function Airplanes() {
       .then((response) => {
         return response.json();
       })
-      .then(({ response }) => {
+      .then(({ response, error }) => {
         if (response) {
           setAirplaneData(response);
           localStorage.setItem('airplaneData', JSON.stringify(response));
-        } else {
-          console.error('No data found, API key missing?');
+        } else if (error) {
+          console.error(error.message);
         }
       });
   }, []);
