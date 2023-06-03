@@ -1,14 +1,12 @@
-'use client';
-
 import { Sphere, useTexture } from '@react-three/drei';
 import { useRef } from 'react';
 
-useTexture.preload(window.location.origin + '/earth.webp');
+useTexture.preload(window.location.origin + 'earth.webp');
 
-export default function Earth({ setTarget }) {
+export default function Earth() {
   const earthSize = 6378137;
   const ref = useRef();
-  const map = useTexture(window.location.origin + '/earth.webp');
+  const map = useTexture('earth.webp');
 
   return <Sphere ref={ref} name='EARTH' material-map={map} args={[earthSize, 64, 64]} />;
 }
