@@ -1,11 +1,19 @@
 'use client';
 
-import { Instances } from '@react-three/drei';
-import { Suspense, useEffect, useState } from 'react';
+import { Instances, useGLTF } from '@react-three/drei';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import Airplane from './Airplane';
 
-export default function Airplanes() {
+useGLTF.preload('/airplane.glb');
+
+export default function Airplanes({ setTarget }) {
+  const { scene } = useGLTF('/airplane.glb');
   const [airplaneData, setAirplaneData] = useState([]);
+  const [showPlaneInfo, setShowPlaneInfo] = useState();
+
+  const shortenedAirplaneData = useMemo(() => airplaneData.slice(0, 10), [airplaneData]);
+  const material = useMemo(() => {}, []);
+  const geometry = useMemo(() => {}, []);
 
   useEffect(() => {
     if (localStorage.getItem('airplaneData')) {
@@ -34,7 +42,16 @@ export default function Airplanes() {
         <meshStandardMaterial color='red' />
 
         {airplaneData.map((airplane) => {
-          return <Airplane key={airplane.hex} {...airplane} />;
+          return (
+            <Airplane
+              key={airplane.hex}
+              {...airplane}
+              model={showPlaneInfo?.hex === airplane.hex ? scene : null}
+              showPlaneInfo={showPlaneInfo}
+              setShowPlaneInfo={setShowPlaneInfo}
+              setTarget={setTarget}
+            />
+          );
         })}
       </Instances>
     </Suspense>
