@@ -1,7 +1,7 @@
 import { Sphere, useTexture } from '@react-three/drei';
 import { useRef } from 'react';
 
-useTexture.preload(window.location.origin + 'earth.webp');
+useTexture.preload('earth.webp');
 
 export default function Earth() {
   const earthSize = 6378137;
