@@ -10,9 +10,10 @@ export default function Airplane({ lat, lng, alt, speed, v_speed }) {
   const modifier = 100000;
 
   const getNewPosition = useCallback((_lat, _lng, _alt, horizontalSpeed, verticalSpeed) => {
-    const newLat = _lat + horizontalSpeed * Math.cos((_alt * Math.PI) / 180) * 0.000001;
-    const newLng = _lng + horizontalSpeed * Math.sin((_alt * Math.PI) / 180) * 0.000001;
-    const newAlt = _alt + verticalSpeed * 0.000001;
+    const speedModifier = modifier * 1000; // x1000 from m/s to km/h
+    const newLat = _lat + (horizontalSpeed * Math.cos((_alt * Math.PI) / 180)) / speedModifier;
+    const newLng = _lng + (horizontalSpeed * Math.sin((_alt * Math.PI) / 180)) / speedModifier;
+    const newAlt = _alt + verticalSpeed / speedModifier;
 
     return {
       lat: newLat,
@@ -21,7 +22,7 @@ export default function Airplane({ lat, lng, alt, speed, v_speed }) {
     };
   }, []);
   const positionToVector3 = useCallback((_alt, _lat, _lng) => {
-    const alt_in_km = _alt * 1000 + 6378137;
+    const alt_in_km = _alt * 10 + 6378137;
     const x = Math.cos(_lat) * Math.cos(_lng) * alt_in_km,
       y = Math.cos(_lat) * Math.sin(_lng) * alt_in_km,
       z = Math.sin(_lat) * alt_in_km;
@@ -54,7 +55,7 @@ export default function Airplane({ lat, lng, alt, speed, v_speed }) {
       ref={ref}
       scale={1 * modifier}
       position={position}
-      userDate={{
+      userData={{
         lat: lat,
         lng: lng,
         alt: alt,

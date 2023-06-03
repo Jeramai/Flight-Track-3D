@@ -1,20 +1,14 @@
+'use client';
+
 import { Sphere, useTexture } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
 import { useRef } from 'react';
 
-useTexture.preload('/earth.webp');
+useTexture.preload(window.location.origin + '/earth.webp');
 
-export default function Earth() {
+export default function Earth({ setTarget }) {
   const earthSize = 6378137;
   const ref = useRef();
-  const map = useTexture('/earth.webp');
-
-  useFrame(({ clock }) => {
-    if (ref.current) {
-      const dt = clock.getDelta();
-      ref.current.rotation.x += dt * 0.00007292115; // Earth's rotation rate in radians per second
-    }
-  });
+  const map = useTexture(window.location.origin + '/earth.webp');
 
   return <Sphere ref={ref} name='EARTH' material-map={map} args={[earthSize, 64, 64]} />;
 }
