@@ -4,7 +4,7 @@ import { Instances } from '@react-three/drei';
 import { Suspense, useEffect, useState } from 'react';
 import Airplane from './Airplane';
 
-export default function Airplanes() {
+export default function Airplanes({ setPlaneInfo }) {
   const [airplaneData, setAirplaneData] = useState([]);
 
   useEffect(() => {
@@ -13,7 +13,7 @@ export default function Airplanes() {
       return;
     }
 
-    const fields = 'hex,lat,lng,alt,dir,speed,v_speed,';
+    const fields = 'hex,lat,lng,alt,dir,speed,v_speed,status,dep_iata';
     const getAirplaneData = fetch(
       `https://airlabs.co/api/v9/flights?api_key=${process.env.NEXT_PUBLIC_API_KEY}&_fields=${fields}`
     );
@@ -32,15 +32,17 @@ export default function Airplanes() {
   }, []);
 
   return (
-    <Suspense>
-      <Instances>
-        <boxGeometry />
-        <meshStandardMaterial color='red' />
+    <group rotation-x={-Math.PI / 2}>
+      <Suspense>
+        <Instances>
+          <boxGeometry />
+          <meshStandardMaterial color='red' />
 
-        {airplaneData.map((airplane) => {
-          return <Airplane key={airplane.hex} {...airplane} />;
-        })}
-      </Instances>
-    </Suspense>
+          {airplaneData.map((airplane) => {
+            return <Airplane key={airplane.hex} {...airplane} setPlaneInfo={setPlaneInfo} />;
+          })}
+        </Instances>
+      </Suspense>
+    </group>
   );
 }

@@ -5,7 +5,7 @@ import { useFrame } from '@react-three/fiber';
 import { useCallback, useRef } from 'react';
 import { Vector3 } from 'three';
 
-export default function Airplane({ lat, lng, alt, speed, v_speed }) {
+export default function Airplane({ setPlaneInfo, hex, lat, lng, alt, speed, v_speed, dep_iata }) {
   const ref = useRef();
   const modifier = 100000;
 
@@ -23,12 +23,18 @@ export default function Airplane({ lat, lng, alt, speed, v_speed }) {
   }, []);
   const positionToVector3 = useCallback((_alt, _lat, _lng) => {
     const alt_in_km = _alt * 10 + 6378137;
-    const x = Math.cos(_lat) * Math.cos(_lng) * alt_in_km,
-      y = Math.cos(_lat) * Math.sin(_lng) * alt_in_km,
-      z = Math.sin(_lat) * alt_in_km;
+    const x = Math.cos(degreesToRadians(_lat)) * Math.cos(degreesToRadians(_lng)) * alt_in_km,
+      y = Math.cos(degreesToRadians(_lat)) * Math.sin(degreesToRadians(_lng)) * alt_in_km,
+      z = Math.sin(degreesToRadians(_lat)) * alt_in_km;
 
     return new Vector3(x, y, z);
   }, []);
+  const onClick = useCallback(() => {
+    setPlaneInfo({
+      hex,
+      dep_iata
+    });
+  }, [dep_iata, hex, setPlaneInfo]);
 
   const position = positionToVector3(alt, lat, lng);
 
@@ -62,6 +68,11 @@ export default function Airplane({ lat, lng, alt, speed, v_speed }) {
         speed: speed,
         v_speed: v_speed
       }}
+      // onClick={onClick}
     />
   );
+}
+
+export function degreesToRadians(degrees) {
+  return degrees * (Math.PI / 180);
 }
