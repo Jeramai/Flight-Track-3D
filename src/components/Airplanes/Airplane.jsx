@@ -7,13 +7,12 @@ import { Vector3 } from 'three';
 
 export default function Airplane({ setPlaneInfo, hex, lat, lng, alt, speed, v_speed, dep_iata }) {
   const ref = useRef();
-  const modifier = 100000;
+  const modifier = 1000000;
 
   const getNewPosition = useCallback((_lat, _lng, _alt, horizontalSpeed, verticalSpeed) => {
-    const speedModifier = modifier * 1000; // x1000 from m/s to km/h
-    const newLat = _lat + (horizontalSpeed * Math.cos((_alt * Math.PI) / 180)) / speedModifier;
-    const newLng = _lng + (horizontalSpeed * Math.sin((_alt * Math.PI) / 180)) / speedModifier;
-    const newAlt = _alt + verticalSpeed / speedModifier;
+    const newLat = _lat + (horizontalSpeed * Math.cos((_alt * Math.PI) / 180)) / modifier;
+    const newLng = _lng + (horizontalSpeed * Math.sin((_alt * Math.PI) / 180)) / modifier;
+    const newAlt = _alt + verticalSpeed / modifier;
 
     return {
       lat: newLat,
@@ -22,13 +21,14 @@ export default function Airplane({ setPlaneInfo, hex, lat, lng, alt, speed, v_sp
     };
   }, []);
   const positionToVector3 = useCallback((_alt, _lat, _lng) => {
-    const alt_in_km = _alt * 10 + 6378137;
+    const alt_in_km = _alt + 6378137;
     const x = Math.cos(degreesToRadians(_lat)) * Math.cos(degreesToRadians(_lng)) * alt_in_km,
       y = Math.cos(degreesToRadians(_lat)) * Math.sin(degreesToRadians(_lng)) * alt_in_km,
       z = Math.sin(degreesToRadians(_lat)) * alt_in_km;
 
     return new Vector3(x, y, z);
   }, []);
+
   const onClick = useCallback(() => {
     setPlaneInfo({
       hex,
@@ -59,7 +59,7 @@ export default function Airplane({ setPlaneInfo, hex, lat, lng, alt, speed, v_sp
   return (
     <Instance
       ref={ref}
-      scale={1 * modifier}
+      scale={(1 * modifier) / 25}
       position={position}
       userData={{
         lat: lat,
